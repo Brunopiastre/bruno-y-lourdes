@@ -1,0 +1,172 @@
+﻿---
+---
+<section class="planta-juntos">
+  <h2>Nuestra Plantita</h2>
+  <p class="subtitulo-planta">Crece con cada día que pasamos juntos 🌦️</p>
+
+  <div class="maceta-contenedor">
+    <div class="gotas" id="gotas"></div>
+    <div class="planta-emoji" id="planta-emoji">🌱</div>
+    <div class="maceta"></div>
+  </div>
+
+  <p class="etapa-nombre" id="etapa-nombre">Semilla</p>
+  <p class="dias-info" id="dias-info"></p>
+
+  <button id="btn-regar" class="btn-regar">💧 Regarla</button>
+  <p class="mensaje-riego" id="mensaje-riego"></p>
+</section>
+
+<style>
+  .planta-juntos {
+    padding: 3rem 1.5rem;
+    text-align: center;
+  }
+  .planta-juntos h2 {
+    color: var(--color-secundario);
+    font-size: clamp(1.6rem, 5vw, 2.2rem);
+    margin-bottom: 0.3rem;
+  }
+  .subtitulo-planta {
+    color: var(--color-texto);
+    margin-bottom: 1.5rem;
+  }
+  .maceta-contenedor {
+    position: relative;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    line-height: 1;
+  }
+  .planta-emoji {
+    font-size: 4rem;
+    transition: transform 0.3s ease;
+  }
+  .maceta {
+    width: 68px;
+    height: 32px;
+    margin-top: -6px;
+    background: linear-gradient(180deg, #c97b4a, #a85f37);
+    clip-path: polygon(14% 0%, 86% 0%, 74% 100%, 26% 100%);
+  }
+  .planta-emoji.regando {
+    animation: bamboleo 0.6s ease;
+  }
+  @keyframes bamboleo {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(-8deg); }
+    75% { transform: rotate(8deg); }
+  }
+  .gotas {
+    position: absolute;
+    top: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 1.4rem;
+    pointer-events: none;
+  }
+  .gota {
+    position: absolute;
+    opacity: 0;
+    animation: caer-gota 0.8s ease-in forwards;
+  }
+  @keyframes caer-gota {
+    0% { transform: translateY(-10px); opacity: 1; }
+    100% { transform: translateY(60px); opacity: 0; }
+  }
+  .etapa-nombre {
+    margin-top: 0.8rem;
+    font-weight: 700;
+    color: var(--color-primario);
+    font-size: 1.1rem;
+  }
+  .dias-info {
+    color: var(--color-texto-suave);
+    font-size: 0.9rem;
+    margin-top: 0.2rem;
+  }
+  .btn-regar {
+    margin-top: 1.4rem;
+    background: var(--color-primario);
+    color: white;
+    border: none;
+    padding: 0.7rem 1.6rem;
+    border-radius: 999px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s;
+  }
+  .btn-regar:hover {
+    transform: scale(1.05);
+  }
+  .mensaje-riego {
+    margin-top: 0.6rem;
+    color: var(--color-primario);
+    font-weight: 600;
+    height: 1.2rem;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+  .mensaje-riego.visible {
+    opacity: 1;
+  }
+</style>
+
+<script>
+  const INICIO = new Date("2025-10-24T00:00:00").getTime();
+
+  const etapas = [
+    { minDias: 0, emoji: "🌱", nombre: "Semilla" },
+    { minDias: 30, emoji: "🌿", nombre: "Brote" },
+    { minDias: 90, emoji: "☘️", nombre: "Plantita" },
+    { minDias: 180, emoji: "🌳", nombre: "Creciendo fuerte" },
+    { minDias: 365, emoji: "🌸", nombre: "Floreciendo" },
+  ];
+
+  const elPlanta = document.getElementById("planta-emoji");
+  const elEtapa = document.getElementById("etapa-nombre");
+  const elDias = document.getElementById("dias-info");
+  const elMensaje = document.getElementById("mensaje-riego");
+  const elGotas = document.getElementById("gotas");
+  const btnRegar = document.getElementById("btn-regar");
+
+  function calcularEtapa() {
+    const dias = Math.floor((Date.now() - INICIO) / (1000 * 60 * 60 * 24));
+    let actual = etapas[0];
+    for (const etapa of etapas) {
+      if (dias >= etapa.minDias) actual = etapa;
+    }
+    return { dias, actual };
+  }
+
+  function pintar() {
+    const { dias, actual } = calcularEtapa();
+    if (elPlanta) elPlanta.textContent = actual.emoji;
+    if (elEtapa) elEtapa.textContent = actual.nombre;
+    if (elDias) elDias.textContent = `${dias} días juntos`;
+  }
+
+  pintar();
+
+  btnRegar?.addEventListener("click", () => {
+    elPlanta?.classList.remove("regando");
+    void (elPlanta as HTMLElement | null)?.offsetWidth;
+    elPlanta?.classList.add("regando");
+
+    for (let i = 0; i < 4; i++) {
+      const gota = document.createElement("span");
+      gota.textContent = "💧";
+      gota.className = "gota";
+      gota.style.left = `${-15 + i * 10}px`;
+      gota.style.animationDelay = `${i * 0.08}s`;
+      elGotas?.appendChild(gota);
+      setTimeout(() => gota.remove(), 900);
+    }
+
+    if (elMensaje) {
+      elMensaje.textContent = "💧 ¡Gracias por cuidarla!";
+      elMensaje.classList.add("visible");
+      setTimeout(() => elMensaje?.classList.remove("visible"), 1800);
+    }
+  });
+</script>

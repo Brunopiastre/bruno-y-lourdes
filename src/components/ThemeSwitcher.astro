@@ -1,0 +1,68 @@
+﻿---
+const temas = [
+  { id: "violeta", color: "#a05a7a" },
+  { id: "verde", color: "#5a9a72" },
+  { id: "celeste", color: "#4a8ca0" },
+  { id: "durazno", color: "#d97a5a" },
+  { id: "amarillo", color: "#c9a227" },
+];
+---
+<div class="selector-tema">
+  {temas.map((tema) => (
+    <button
+      class="swatch"
+      data-tema={tema.id}
+      style={`background:${tema.color}`}
+      title={`Tema ${tema.id}`}
+      aria-label={`Tema ${tema.id}`}
+    ></button>
+  ))}
+</div>
+
+<style>
+  .selector-tema {
+    position: fixed;
+    top: 1.2rem;
+    left: 1.2rem;
+    display: flex;
+    gap: 0.5rem;
+    z-index: 500;
+  }
+  .swatch {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 2px solid white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    cursor: pointer;
+    transition: transform 0.2s;
+    padding: 0;
+  }
+  .swatch:hover {
+    transform: scale(1.15);
+  }
+  .swatch.activo {
+    box-shadow: 0 0 0 3px var(--color-secundario, #333);
+  }
+</style>
+
+<script>
+  const swatches = document.querySelectorAll<HTMLButtonElement>(".swatch");
+  const guardado = localStorage.getItem("tema") || "violeta";
+
+  function aplicarTema(id: string) {
+    if (id === "violeta") {
+      document.documentElement.removeAttribute("data-tema");
+    } else {
+      document.documentElement.setAttribute("data-tema", id);
+    }
+    swatches.forEach((s) => s.classList.toggle("activo", s.dataset.tema === id));
+    localStorage.setItem("tema", id);
+  }
+
+  aplicarTema(guardado);
+
+  swatches.forEach((s) => {
+    s.addEventListener("click", () => aplicarTema(s.dataset.tema!));
+  });
+</script>

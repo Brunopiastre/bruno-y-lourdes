@@ -1,0 +1,81 @@
+﻿---
+---
+<div class="bienvenida" id="pantalla-bienvenida">
+  <div class="contenido-bienvenida">
+    <p class="emoji-bienvenida">💕</p>
+    <h2>Bienvenid@ a nuestra historia</h2>
+    <p>✨ Un pedacito de nuestra historia juntos. ✨</p>
+    <button id="btn-entrar">Entrar</button>
+  </div>
+</div>
+
+<style>
+  .bienvenida {
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+    background: linear-gradient(135deg, var(--color-fondo), var(--color-fondo-alt));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 1.5rem;
+    transition: opacity 0.8s ease;
+  }
+  .bienvenida.oculto {
+    opacity: 0;
+    pointer-events: none;
+  }
+  .contenido-bienvenida {
+    max-width: 420px;
+  }
+  .emoji-bienvenida {
+    font-size: 3rem;
+    margin: 0 0 0.5rem;
+    animation: latido 1.6s ease-in-out infinite;
+  }
+  @keyframes latido {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.15); }
+  }
+  .contenido-bienvenida h2 {
+    font-family: var(--fuente-titulo);
+    color: var(--color-secundario);
+    font-size: clamp(1.5rem, 6vw, 2.2rem);
+    margin: 0 0 0.5rem;
+  }
+  .contenido-bienvenida p {
+    color: var(--color-texto);
+    margin-bottom: 1.8rem;
+  }
+  #btn-entrar {
+    background: var(--color-primario);
+    color: white;
+    border: none;
+    padding: 0.9rem 2.2rem;
+    border-radius: 999px;
+    font-size: 1.05rem;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: var(--sombra);
+    transition: transform 0.2s;
+  }
+  #btn-entrar:hover {
+    transform: scale(1.05);
+  }
+</style>
+
+<script>
+  const pantalla = document.getElementById("pantalla-bienvenida");
+  const boton = document.getElementById("btn-entrar");
+
+  boton?.addEventListener("click", () => {
+    pantalla?.classList.add("oculto");
+    setTimeout(() => pantalla?.remove(), 800);
+
+    const audio = document.getElementById("musica-fondo") as HTMLAudioElement | null;
+    audio?.play().catch(() => {});
+  });
+</script>
+
+

@@ -1,0 +1,48 @@
+﻿---
+---
+<audio id="musica-fondo" src="/audio/lofi.mp3" loop preload="none"></audio>
+<button id="btn-musica" class="control-musica" title="Musica de fondo" aria-label="Musica de fondo">🔈</button>
+
+<style>
+  .control-musica {
+    position: fixed;
+    bottom: 1.2rem;
+    left: 1.2rem;
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    border: none;
+    background: white;
+    box-shadow: var(--sombra);
+    font-size: 1.3rem;
+    cursor: pointer;
+    z-index: 900;
+    transition: transform 0.2s;
+  }
+  .control-musica:hover {
+    transform: scale(1.1);
+  }
+</style>
+
+<script>
+  const audio = document.getElementById("musica-fondo") as HTMLAudioElement | null;
+  const boton = document.getElementById("btn-musica");
+
+  function actualizarIcono() {
+    if (!boton || !audio) return;
+    boton.textContent = audio.paused ? "🔈" : "🔊";
+  }
+
+  boton?.addEventListener("click", () => {
+    if (!audio) return;
+    if (audio.paused) {
+      audio.play().catch(() => {});
+    } else {
+      audio.pause();
+    }
+  });
+
+  audio?.addEventListener("play", actualizarIcono);
+  audio?.addEventListener("pause", actualizarIcono);
+  actualizarIcono();
+</script>

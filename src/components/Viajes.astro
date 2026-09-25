@@ -5,23 +5,25 @@ const viajes = [
     nombre: "Reñaca",
     descripcion: "Unos días a principios de 2026 🌊",
     duracion: "Unos días",
-    fotos: 6,
+    fotos: ["1.jpg", "2.jpg", "3.jpg", "4.jpg", "5.jpg"],
   },
   {
     id: "florianopolis",
     nombre: "Florianópolis",
     descripcion: "Nuestro primer viaje juntos ✈️ Viajamos para el Día de los Enamorados, el 14 de febrero.",
     duracion: "2 semanas",
-    fotos: 8,
+    fotos: ["1.jpg", "2.jpg", "3.jpg", "4.jpg", "5.jpg", "6.jpg", "7.jpg", "8.jpg", "9.jpg", "10.jpg"],
   },
   {
     id: "iguazu",
     nombre: "Iguazú",
     descripcion: "Viajecito para cortar el invierno ❄️",
     duracion: "2 semanas",
-    fotos: 8,
+    fotos: ["1.jpg", "2.jpg", "3.jpg", "4.jpg", "5.jpg", "6.jpg", "7.jpg", "8.jpg", "9.jpg", "10.jpg", "11.jpg"],
   },
 ];
+
+const rotaciones = [-6, 4, -3, 6, -4, 3, -5, 5];
 ---
 <section class="viajes">
   <h2>Nuestros Viajes</h2>
@@ -42,13 +44,39 @@ const viajes = [
       <p class="descripcion">{viaje.descripcion}</p>
       <p class="duracion">🗓️ Duración: {viaje.duracion}</p>
       <div class="galeria">
-        {Array.from({ length: viaje.fotos }).map(() => (
-          <div class="foto-placeholder">📷</div>
-        ))}
+        {typeof viaje.fotos === "number"
+          ? Array.from({ length: viaje.fotos }).map((_, i) => (
+              <div
+                class="polaroid"
+                style={`transform: rotate(${rotaciones[i % rotaciones.length]}deg)`}
+              >
+                <div class="foto-placeholder">📷</div>
+              </div>
+            ))
+          : viaje.fotos.map((archivo, i) => (
+              <div
+                class="polaroid"
+                style={`transform: rotate(${rotaciones[i % rotaciones.length]}deg)`}
+              >
+                <div class="foto-placeholder">
+                  <img
+                    class="foto-real"
+                    src={`/fotos/${viaje.id}/${archivo}`}
+                    alt={viaje.nombre}
+                    loading="lazy"
+                  />
+                </div>
+              </div>
+            ))}
       </div>
     </div>
   </div>
 ))}
+
+<div class="lightbox" id="lightbox">
+  <button class="lightbox-cerrar" id="lightbox-cerrar">✕</button>
+  <div class="lightbox-contenido" id="lightbox-contenido"></div>
+</div>
 
 <style>
   .viajes {
@@ -135,17 +163,84 @@ const viajes = [
   .galeria {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-    gap: 0.8rem;
-    margin-top: 1.5rem;
+    gap: 1.4rem;
+    margin-top: 2rem;
+    padding: 0 0.5rem;
+  }
+  .polaroid {
+    background: white;
+    padding: 10px 10px 26px 10px;
+    border-radius: 4px;
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.18);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    cursor: pointer;
+  }
+  .polaroid:hover {
+    transform: rotate(0deg) scale(1.06) !important;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25);
+    z-index: 2;
+    position: relative;
   }
   .foto-placeholder {
     aspect-ratio: 1;
     background: var(--color-fondo-alt);
-    border-radius: 12px;
+    border-radius: 2px;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 1.8rem;
+    overflow: hidden;
+  }
+  .foto-real {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .lightbox {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(20, 15, 25, 0.88);
+    z-index: 1500;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+  }
+  .lightbox.abierto {
+    display: flex;
+  }
+  .lightbox-contenido {
+    background: white;
+    border-radius: 8px;
+    padding: 16px 16px 28px 16px;
+    max-width: min(90vw, 500px);
+    max-height: 80vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 5rem;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+  }
+  .lightbox-contenido img {
+    max-width: 100%;
+    max-height: 70vh;
+    display: block;
+    border-radius: 2px;
+  }
+  .lightbox-cerrar {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    background: white;
+    border: none;
+    border-radius: 50%;
+    width: 42px;
+    height: 42px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    color: var(--color-secundario);
   }
 </style>
 
@@ -202,5 +297,26 @@ const viajes = [
     modal.addEventListener("click", (e) => {
       if (e.target === modal) modal.classList.remove("abierto");
     });
+  });
+
+  const lightbox = document.getElementById("lightbox");
+  const lightboxContenido = document.getElementById("lightbox-contenido");
+
+  document.querySelectorAll(".polaroid").forEach((el) => {
+    el.addEventListener("click", () => {
+      const foto = el.querySelector(".foto-placeholder");
+      if (foto && lightboxContenido) {
+        lightboxContenido.innerHTML = foto.innerHTML;
+      }
+      lightbox?.classList.add("abierto");
+    });
+  });
+
+  document.getElementById("lightbox-cerrar")?.addEventListener("click", () => {
+    lightbox?.classList.remove("abierto");
+  });
+
+  lightbox?.addEventListener("click", (e) => {
+    if (e.target === lightbox) lightbox.classList.remove("abierto");
   });
 </script>
