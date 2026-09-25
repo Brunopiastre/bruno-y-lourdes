@@ -1,0 +1,32 @@
+﻿:root {
+  --color-fondo: #fdf6f0;
+  --color-fondo-alt: #f3e8ff;
+  --color-primario: #a05a7a;
+  --color-secundario: #5a4a6a;
+  --color-texto: #6b5b73;
+  --color-texto-suave: #9a8aa8;
+  --sombra: 0 4px 16px rgba(90, 74, 106, 0.15);
+
+  --fuente-titulo: 'Playfair Display', Georgia, serif;
+  --fuente-texto: 'Quicksand', -apple-system, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  position: relative;
+  font-family: var(--fuente-texto);
+  color: var(--color-texto);
+}
+
+h1, h2, h3 {
+  font-family: var(--fuente-titulo);
+}
+
+.contenido {
+  position: relative;
+  z-index: 1;
+}

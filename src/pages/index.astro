@@ -1,0 +1,30 @@
+﻿---
+import Hero from '../components/Hero.astro';
+import Viajes from '../components/Viajes.astro';
+import Mapa from '../components/Mapa.astro';
+import Redes from '../components/Redes.astro';
+import FloatingElements from '../components/FloatingElements.astro';
+import CursorCorazones from '../components/CursorCorazones.astro';
+import '../styles/global.css';
+---
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Bruno & Lourdes</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  </head>
+  <body>
+    <FloatingElements />
+    <CursorCorazones />
+    <div class="contenido">
+      <Hero />
+      <Viajes />
+      <Mapa />
+      <Redes />
+    </div>
+  </body>
+</html>

@@ -1,0 +1,28 @@
+﻿---
+---
+<script>
+  const corazones = ["❤️", "💕", "💖"];
+
+  document.addEventListener("mousemove", (e) => {
+    if (Math.random() > 0.3) return;
+
+    const corazon = document.createElement("span");
+    corazon.textContent = corazones[Math.floor(Math.random() * corazones.length)];
+    corazon.style.position = "fixed";
+    corazon.style.left = `${e.clientX}px`;
+    corazon.style.top = `${e.clientY}px`;
+    corazon.style.pointerEvents = "none";
+    corazon.style.fontSize = "1.2rem";
+    corazon.style.zIndex = "9999";
+    corazon.style.transition = "transform 1s ease-out, opacity 1s ease-out";
+    corazon.style.transform = "translate(-50%, -50%)";
+    document.body.appendChild(corazon);
+
+    requestAnimationFrame(() => {
+      corazon.style.transform = `translate(-50%, -100%) scale(1.5)`;
+      corazon.style.opacity = "0";
+    });
+
+    setTimeout(() => corazon.remove(), 1000);
+  });
+</script>

@@ -1,0 +1,58 @@
+﻿---
+const lugares = [
+  { nombre: "Reñaca", lat: -32.9667, lng: -71.5333 },
+  { nombre: "Mendoza", lat: -32.8908, lng: -68.8272 },
+  { nombre: "Florianópolis", lat: -27.5954, lng: -48.5480 },
+  { nombre: "Iguazú", lat: -25.5952, lng: -54.5734 },
+];
+---
+<section class="mapa">
+  <h2>Lugares que visitamos</h2>
+  <div id="mapa-leaflet"></div>
+</section>
+
+<style>
+  .mapa {
+    padding: 4rem 1.5rem;
+    text-align: center;
+    background: var(--color-fondo);
+  }
+  .mapa h2 {
+    color: var(--color-secundario);
+    font-size: clamp(1.6rem, 5vw, 2.2rem);
+  }
+  #mapa-leaflet {
+    max-width: 900px;
+    height: 450px;
+    margin: 2rem auto 0;
+    border-radius: 16px;
+    box-shadow: var(--sombra);
+    z-index: 1;
+  }
+</style>
+
+<script define:vars={{ lugares }}>
+  function iniciarMapa() {
+    const mapa = L.map("mapa-leaflet").setView([0, 0], 2);
+
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution: "&copy; OpenStreetMap contributors",
+    }).addTo(mapa);
+
+    lugares.forEach((lugar) => {
+      L.marker([lugar.lat, lugar.lng])
+        .addTo(mapa)
+        .bindPopup(`<strong>${lugar.nombre}</strong>`);
+    });
+  }
+
+  if (!window.L) {
+    const script = document.createElement("script");
+    script.src = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.js";
+    script.onload = iniciarMapa;
+    document.head.appendChild(script);
+  } else {
+    iniciarMapa();
+  }
+</script>
+
